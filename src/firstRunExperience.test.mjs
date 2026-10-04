@@ -565,17 +565,14 @@ test('markup, startup ordering and accessibility remain pinned', () => {
   // text counts; the comment beside it naturally says the words too.
   const envTile = html.slice(html.indexOf('data-first-run-choice="environmental"'));
   const visible = envTile.slice(envTile.indexOf('<small>'), envTile.indexOf('</small>'));
-  assert.match(visible, /earthquakes/i);
-  assert.match(visible, /fires?/i, 'the tile must promise the fires it enables');
+  assert.match(visible, /sismos.*USGS/i);
+  assert.match(visible, /incendios.*NASA/i, 'the tile must promise the fires it enables');
+  assert.match(visible, /requieren una clave/i);
 
-  // The card's one persuasive line is OWNER-AUTHORED and pinned verbatim,
-  // unspaced em dash included. This is copy, not prose to be improved in a
-  // passing edit — changing it needs the owner, not a nicer-sounding rewrite.
-  assert.ok(
-    html.includes('<p id="first-run-description">It feels like a forbidden cockpit'
-      + '—then you realize the sources are public and the data is real.</p>'),
-    'the owner-authored first-run line must ship exactly as written',
-  );
+  // BPN's new entry copy keeps the public-data framing and upstream credit.
+  assert.match(html, /id="first-run-description">Desde el norte, hacia cualquier lugar\./);
+  assert.match(html, /Explora datos públicos/);
+  assert.match(html, /href="https:\/\/github.com\/bilawalsidhu\/gods-eye-view"/);
 
   // Menu order is the owner's, read straight off the markup.
   const order = [...html.matchAll(/data-first-run-choice="([a-z-]+)"/g)].map((match) => match[1]);
